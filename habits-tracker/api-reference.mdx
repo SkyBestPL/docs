@@ -21,7 +21,7 @@ Retrieves all habits ordered by creation date.
 const habits = await habitService.getAllHabits();
 ```
 
-**Returns:** `Promise<Array<Habit>>`
+**Returns:** `Promise<Array\<Habit\>>`
 
 **Example response:**
 ```javascript
@@ -61,7 +61,7 @@ const newHabit = await habitService.createHabit({
   - `color` (string, required) - Hex color code
   - `icon` (string, optional) - Emoji or icon
 
-**Returns:** `Promise<Habit>`
+**Returns:** `Promise\<Habit\>`
 
 **Throws:** Error if validation fails or database operation fails
 
@@ -80,7 +80,7 @@ const updated = await habitService.updateHabit(
 - `id` (string) - Habit UUID
 - `updates` (Object) - Fields to update
 
-**Returns:** `Promise<Habit>`
+**Returns:** `Promise\<Habit\>`
 
 ##### deleteHabit(id)
 
@@ -93,7 +93,7 @@ await habitService.deleteHabit("550e8400-e29b-41d4-a716-446655440000");
 **Parameters:**
 - `id` (string) - Habit UUID
 
-**Returns:** `Promise<void>`
+**Returns:** `Promise\<void\>`
 
 #### progressService
 
@@ -107,7 +107,7 @@ Retrieves all progress records.
 const progress = await progressService.getProgress();
 ```
 
-**Returns:** `Promise<Array<Progress>>`
+**Returns:** `Promise<Array\<Progress\>>`
 
 **Example response:**
 ```javascript
@@ -137,7 +137,7 @@ const progress = await progressService.toggleProgress(
 - `habitId` (string) - Habit UUID
 - `date` (string | Date) - Date in YYYY-MM-DD format or Date object
 
-**Returns:** `Promise<Progress>`
+**Returns:** `Promise\<Progress\>`
 
 **Behavior:**
 - If progress exists: toggles `done` status
@@ -160,7 +160,7 @@ const progress = await progressService.getProgressForHabit(
 - `startDate` (string, optional) - Start date (YYYY-MM-DD)
 - `endDate` (string, optional) - End date (YYYY-MM-DD)
 
-**Returns:** `Promise<Array<Progress>>`
+**Returns:** `Promise<Array\<Progress\>>`
 
 ### Analytics service
 
@@ -185,8 +185,8 @@ const { habit, streak } = analyticsService.getLongestStreak(habits, progress);
 ```
 
 **Parameters:**
-- `habits` (Array<Habit>) - All habits
-- `progress` (Array<Progress>) - All progress records
+- `habits` (Array\<Habit\>) - All habits
+- `progress` (Array\<Progress\>) - All progress records
 
 **Returns:** `Object`
 - `habit` (Habit | null) - Habit with longest streak
@@ -201,8 +201,8 @@ const { habit, streak } = analyticsService.getCurrentStreak(habits, progress);
 ```
 
 **Parameters:**
-- `habits` (Array<Habit>) - All habits
-- `progress` (Array<Progress>) - All progress records
+- `habits` (Array\<Habit\>) - All habits
+- `progress` (Array\<Progress\>) - All progress records
 
 **Returns:** `Object`
 - `habit` (Habit | null) - Habit with current streak
@@ -217,8 +217,8 @@ const rate = analyticsService.getCompletionRate(habits, progress, weekStart);
 ```
 
 **Parameters:**
-- `habits` (Array<Habit>) - All habits
-- `progress` (Array<Progress>) - All progress records
+- `habits` (Array\<Habit\>) - All habits
+- `progress` (Array\<Progress\>) - All progress records
 - `weekStart` (Date) - Start of the week
 
 **Returns:** `number` - Percentage (0-100)
@@ -236,8 +236,8 @@ const url = shareService.generateShareLink(habits, progress);
 ```
 
 **Parameters:**
-- `habits` (Array<Habit>) - Habits to share
-- `progress` (Array<Progress>) - Progress to share
+- `habits` (Array\<Habit\>) - Habits to share
+- `progress` (Array\<Progress\>) - Progress to share
 
 **Returns:** `string` - Full URL with encoded data
 
@@ -255,8 +255,8 @@ const data = shareService.parseShareLink();
 ```
 
 **Returns:** `Object | null`
-- `habits` (Array<Habit>) - Decoded habits
-- `progress` (Array<Progress>) - Decoded progress
+- `habits` (Array\<Habit\>) - Decoded habits
+- `progress` (Array\<Progress\>) - Decoded progress
 - Returns `null` if no shared data in URL
 
 ### Theme service
@@ -306,8 +306,8 @@ exportService.exportToJSON(habits, progress);
 ```
 
 **Parameters:**
-- `habits` (Array<Habit>) - Habits to export
-- `progress` (Array<Progress>) - Progress to export
+- `habits` (Array\<Habit\>) - Habits to export
+- `progress` (Array\<Progress\>) - Progress to export
 
 **Returns:** `void`
 
@@ -327,7 +327,7 @@ new HabitCard(habit, progress, weekStart, isReadOnly, onUpdate, onCalendarOpen)
 
 **Parameters:**
 - `habit` (Habit) - Habit data
-- `progress` (Array<Progress>) - All progress records
+- `progress` (Array\<Progress\>) - All progress records
 - `weekStart` (Date) - Start of current week
 - `isReadOnly` (boolean) - Whether in read-only mode
 - `onUpdate` (Function) - Callback after updates
@@ -381,8 +381,8 @@ new ShareModal(habits, progress, onClose)
 ```
 
 **Parameters:**
-- `habits` (Array<Habit>) - Habits to share
-- `progress` (Array<Progress>) - Progress to share
+- `habits` (Array\<Habit\>) - Habits to share
+- `progress` (Array\<Progress\>) - Progress to share
 - `onClose` (Function) - Callback when modal closes
 
 #### render()
@@ -408,7 +408,7 @@ new CalendarModal(habit, progress, isReadOnly, onClose, onUpdate)
 
 **Parameters:**
 - `habit` (Habit) - Habit to display
-- `progress` (Array<Progress>) - All progress records
+- `progress` (Array\<Progress\>) - All progress records
 - `isReadOnly` (boolean) - Whether in read-only mode
 - `onClose` (Function) - Callback when modal closes
 - `onUpdate` (Function) - Callback after progress updates
@@ -433,7 +433,7 @@ calendarModal.updateProgressData(newProgress);
 ```
 
 **Parameters:**
-- `progress` (Array<Progress>) - Updated progress records
+- `progress` (Array\<Progress\>) - Updated progress records
 
 **Returns:** `void`
 
@@ -448,8 +448,8 @@ new Charts(habits, progress, weekStart)
 ```
 
 **Parameters:**
-- `habits` (Array<Habit>) - All habits
-- `progress` (Array<Progress>) - All progress records
+- `habits` (Array\<Habit\>) - All habits
+- `progress` (Array\<Progress\>) - All progress records
 - `weekStart` (Date) - Start of current week
 
 #### renderWeeklyProgress(container)

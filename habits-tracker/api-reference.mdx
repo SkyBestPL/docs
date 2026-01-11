@@ -1,0 +1,535 @@
+---
+title: API reference
+description: Complete reference for services and components
+---
+
+## Services
+
+### Supabase service
+
+Database communication layer providing CRUD operations.
+
+#### habitService
+
+Manages habit records in the database.
+
+##### getAllHabits()
+
+Retrieves all habits ordered by creation date.
+
+```javascript
+const habits = await habitService.getAllHabits();
+```
+
+**Returns:** `Promise<Array<Habit>>`
+
+**Example response:**
+```javascript
+[
+  {
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    name: "Morning meditation",
+    description: "10 minutes of mindfulness",
+    category: "Wellness",
+    color: "#93c5fd",
+    icon: "🧘",
+    created_at: "2024-01-15T08:00:00Z",
+    updated_at: "2024-01-15T08:00:00Z"
+  }
+]
+```
+
+##### createHabit(habit)
+
+Creates a new habit.
+
+```javascript
+const newHabit = await habitService.createHabit({
+  name: "Morning run",
+  description: "30 minutes cardio",
+  category: "Fitness",
+  color: "#fdba74",
+  icon: "🏃"
+});
+```
+
+**Parameters:**
+- `habit` (Object) - Habit data
+  - `name` (string, required) - 3-50 characters
+  - `description` (string, optional) - Max 200 characters
+  - `category` (string, required) - One of: Wellness, Learning, Fitness, Health, Productivity, Other
+  - `color` (string, required) - Hex color code
+  - `icon` (string, optional) - Emoji or icon
+
+**Returns:** `Promise<Habit>`
+
+**Throws:** Error if validation fails or database operation fails
+
+##### updateHabit(id, updates)
+
+Updates an existing habit.
+
+```javascript
+const updated = await habitService.updateHabit(
+  "550e8400-e29b-41d4-a716-446655440000",
+  { name: "Evening meditation", description: "15 minutes" }
+);
+```
+
+**Parameters:**
+- `id` (string) - Habit UUID
+- `updates` (Object) - Fields to update
+
+**Returns:** `Promise<Habit>`
+
+##### deleteHabit(id)
+
+Deletes a habit and all associated progress.
+
+```javascript
+await habitService.deleteHabit("550e8400-e29b-41d4-a716-446655440000");
+```
+
+**Parameters:**
+- `id` (string) - Habit UUID
+
+**Returns:** `Promise<void>`
+
+#### progressService
+
+Manages progress tracking for habits.
+
+##### getProgress()
+
+Retrieves all progress records.
+
+```javascript
+const progress = await progressService.getProgress();
+```
+
+**Returns:** `Promise<Array<Progress>>`
+
+**Example response:**
+```javascript
+[
+  {
+    id: "660e8400-e29b-41d4-a716-446655440001",
+    habit_id: "550e8400-e29b-41d4-a716-446655440000",
+    date: "2024-01-15",
+    done: true,
+    created_at: "2024-01-15T20:30:00Z"
+  }
+]
+```
+
+##### toggleProgress(habitId, date)
+
+Toggles completion status for a specific date.
+
+```javascript
+const progress = await progressService.toggleProgress(
+  "550e8400-e29b-41d4-a716-446655440000",
+  "2024-01-15"
+);
+```
+
+**Parameters:**
+- `habitId` (string) - Habit UUID
+- `date` (string | Date) - Date in YYYY-MM-DD format or Date object
+
+**Returns:** `Promise<Progress>`
+
+**Behavior:**
+- If progress exists: toggles `done` status
+- If progress doesn't exist: creates new record with `done: true`
+
+##### getProgressForHabit(habitId, startDate, endDate)
+
+Retrieves progress for a specific habit within a date range.
+
+```javascript
+const progress = await progressService.getProgressForHabit(
+  "550e8400-e29b-41d4-a716-446655440000",
+  "2024-01-01",
+  "2024-01-31"
+);
+```
+
+**Parameters:**
+- `habitId` (string) - Habit UUID
+- `startDate` (string, optional) - Start date (YYYY-MM-DD)
+- `endDate` (string, optional) - End date (YYYY-MM-DD)
+
+**Returns:** `Promise<Array<Progress>>`
+
+### Analytics service
+
+Calculates statistics and metrics from habit data.
+
+#### getWeekStart()
+
+Gets the start date of the current week (Monday).
+
+```javascript
+const weekStart = analyticsService.getWeekStart();
+```
+
+**Returns:** `Date`
+
+#### getLongestStreak(habits, progress)
+
+Calculates the longest consecutive completion streak.
+
+```javascript
+const { habit, streak } = analyticsService.getLongestStreak(habits, progress);
+```
+
+**Parameters:**
+- `habits` (Array<Habit>) - All habits
+- `progress` (Array<Progress>) - All progress records
+
+**Returns:** `Object`
+- `habit` (Habit | null) - Habit with longest streak
+- `streak` (number) - Length of longest streak in days
+
+#### getCurrentStreak(habits, progress)
+
+Calculates the current active streak.
+
+```javascript
+const { habit, streak } = analyticsService.getCurrentStreak(habits, progress);
+```
+
+**Parameters:**
+- `habits` (Array<Habit>) - All habits
+- `progress` (Array<Progress>) - All progress records
+
+**Returns:** `Object`
+- `habit` (Habit | null) - Habit with current streak
+- `streak` (number) - Length of current streak in days
+
+#### getCompletionRate(habits, progress, weekStart)
+
+Calculates completion percentage for the current week.
+
+```javascript
+const rate = analyticsService.getCompletionRate(habits, progress, weekStart);
+```
+
+**Parameters:**
+- `habits` (Array<Habit>) - All habits
+- `progress` (Array<Progress>) - All progress records
+- `weekStart` (Date) - Start of the week
+
+**Returns:** `number` - Percentage (0-100)
+
+### Share service
+
+Manages sharing functionality with URL encoding.
+
+#### generateShareLink(habits, progress)
+
+Creates a shareable URL with encoded data.
+
+```javascript
+const url = shareService.generateShareLink(habits, progress);
+```
+
+**Parameters:**
+- `habits` (Array<Habit>) - Habits to share
+- `progress` (Array<Progress>) - Progress to share
+
+**Returns:** `string` - Full URL with encoded data
+
+**Example:**
+```
+https://example.com/?view=public&data=eyJoYWJpdHMiOlt...
+```
+
+#### parseShareLink()
+
+Parses shared data from current URL.
+
+```javascript
+const data = shareService.parseShareLink();
+```
+
+**Returns:** `Object | null`
+- `habits` (Array<Habit>) - Decoded habits
+- `progress` (Array<Progress>) - Decoded progress
+- Returns `null` if no shared data in URL
+
+### Theme service
+
+Manages dark/light theme switching.
+
+#### init()
+
+Initializes theme based on system preference or saved choice.
+
+```javascript
+themeService.init();
+```
+
+**Returns:** `void`
+
+#### getTheme()
+
+Gets the current theme.
+
+```javascript
+const theme = themeService.getTheme();
+```
+
+**Returns:** `string` - "light" or "dark"
+
+#### toggleTheme()
+
+Switches between light and dark themes.
+
+```javascript
+themeService.toggleTheme();
+```
+
+**Returns:** `void`
+
+### Export service
+
+Handles data export functionality.
+
+#### exportToJSON(habits, progress)
+
+Exports data as downloadable JSON file.
+
+```javascript
+exportService.exportToJSON(habits, progress);
+```
+
+**Parameters:**
+- `habits` (Array<Habit>) - Habits to export
+- `progress` (Array<Progress>) - Progress to export
+
+**Returns:** `void`
+
+**Side effects:** Triggers browser download of JSON file
+
+## Components
+
+### HabitCard
+
+Displays a single habit with weekly progress grid.
+
+#### Constructor
+
+```javascript
+new HabitCard(habit, progress, weekStart, isReadOnly, onUpdate, onCalendarOpen)
+```
+
+**Parameters:**
+- `habit` (Habit) - Habit data
+- `progress` (Array<Progress>) - All progress records
+- `weekStart` (Date) - Start of current week
+- `isReadOnly` (boolean) - Whether in read-only mode
+- `onUpdate` (Function) - Callback after updates
+- `onCalendarOpen` (Function) - Callback to open calendar
+
+#### render()
+
+Renders the habit card DOM element.
+
+```javascript
+const element = habitCard.render();
+document.body.appendChild(element);
+```
+
+**Returns:** `HTMLElement`
+
+### HabitModal
+
+Modal dialog for creating or editing habits.
+
+#### Constructor
+
+```javascript
+new HabitModal(onSave, onClose, habit)
+```
+
+**Parameters:**
+- `onSave` (Function) - Callback with habit data
+- `onClose` (Function) - Callback when modal closes
+- `habit` (Habit, optional) - Existing habit for editing
+
+#### render()
+
+Renders the modal DOM element.
+
+```javascript
+const element = habitModal.render();
+document.body.appendChild(element);
+```
+
+**Returns:** `HTMLElement`
+
+### ShareModal
+
+Modal for generating and copying share links.
+
+#### Constructor
+
+```javascript
+new ShareModal(habits, progress, onClose)
+```
+
+**Parameters:**
+- `habits` (Array<Habit>) - Habits to share
+- `progress` (Array<Progress>) - Progress to share
+- `onClose` (Function) - Callback when modal closes
+
+#### render()
+
+Renders the modal DOM element.
+
+```javascript
+const element = shareModal.render();
+document.body.appendChild(element);
+```
+
+**Returns:** `HTMLElement`
+
+### CalendarModal
+
+Extended calendar view for a habit.
+
+#### Constructor
+
+```javascript
+new CalendarModal(habit, progress, isReadOnly, onClose, onUpdate)
+```
+
+**Parameters:**
+- `habit` (Habit) - Habit to display
+- `progress` (Array<Progress>) - All progress records
+- `isReadOnly` (boolean) - Whether in read-only mode
+- `onClose` (Function) - Callback when modal closes
+- `onUpdate` (Function) - Callback after progress updates
+
+#### render()
+
+Renders the modal DOM element.
+
+```javascript
+const element = calendarModal.render();
+document.body.appendChild(element);
+```
+
+**Returns:** `HTMLElement`
+
+#### updateProgressData(progress)
+
+Updates progress data without re-rendering.
+
+```javascript
+calendarModal.updateProgressData(newProgress);
+```
+
+**Parameters:**
+- `progress` (Array<Progress>) - Updated progress records
+
+**Returns:** `void`
+
+### Charts
+
+Manages Chart.js visualizations.
+
+#### Constructor
+
+```javascript
+new Charts(habits, progress, weekStart)
+```
+
+**Parameters:**
+- `habits` (Array<Habit>) - All habits
+- `progress` (Array<Progress>) - All progress records
+- `weekStart` (Date) - Start of current week
+
+#### renderWeeklyProgress(container)
+
+Renders weekly progress bar chart.
+
+```javascript
+charts.renderWeeklyProgress(containerElement);
+```
+
+**Parameters:**
+- `container` (HTMLElement) - Container element
+
+**Returns:** `void`
+
+#### renderCategoryDistribution(container)
+
+Renders category distribution pie chart.
+
+```javascript
+charts.renderCategoryDistribution(containerElement);
+```
+
+**Parameters:**
+- `container` (HTMLElement) - Container element
+
+**Returns:** `void`
+
+#### destroy()
+
+Destroys all chart instances.
+
+```javascript
+charts.destroy();
+```
+
+**Returns:** `void`
+
+## Type definitions
+
+### Habit
+
+```typescript
+interface Habit {
+  id: string;
+  name: string;
+  description?: string;
+  category: 'Wellness' | 'Learning' | 'Fitness' | 'Health' | 'Productivity' | 'Other';
+  color: string;
+  icon?: string;
+  created_at: string;
+  updated_at: string;
+}
+```
+
+### Progress
+
+```typescript
+interface Progress {
+  id: string;
+  habit_id: string;
+  date: string;
+  done: boolean;
+  created_at: string;
+}
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="sitemap" href="/habits-tracker/architecture">
+    Understand the technical design
+  </Card>
+  <Card title="Database schema" icon="database" href="/habits-tracker/database">
+    Explore data structure
+  </Card>
+  <Card title="Features" icon="sparkles" href="/habits-tracker/features">
+    Learn about all capabilities
+  </Card>
+  <Card title="Quick start" icon="rocket" href="/habits-tracker/quickstart">
+    Get started quickly
+  </Card>
+</CardGroup>

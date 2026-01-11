@@ -48,6 +48,33 @@
         ]
       },
       {
+        "tab": "Habits Tracker",
+        "icon": "fire",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": [
+              "habits-tracker/introduction",
+              "habits-tracker/quickstart"
+            ]
+          },
+          {
+            "group": "Documentation",
+            "pages": [
+              "habits-tracker/architecture",
+              "habits-tracker/features",
+              "habits-tracker/database"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "habits-tracker/api-reference"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "API reference",
         "groups": [
           {

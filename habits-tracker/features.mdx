@@ -1,0 +1,301 @@
+---
+title: Features
+description: Complete guide to all Habits Tracker capabilities
+---
+
+## Core features
+
+### Habit management
+
+#### Creating habits
+
+Add new habits with comprehensive customization:
+
+1. Click "Add Habit" button in the header
+2. Fill in the form:
+   - **Name** (required, 3-50 characters)
+   - **Description** (optional, max 200 characters)
+   - **Color** - Choose from 12 color options
+   - **Category** - Select from 6 predefined categories
+3. Click "Add Habit" to save
+
+<Note>
+Habit names must be between 3 and 50 characters. Descriptions are optional but limited to 200 characters.
+</Note>
+
+#### Editing habits
+
+Modify existing habits at any time:
+
+1. Click the pencil icon on any habit card
+2. Update any field in the modal
+3. Click "Save Changes"
+
+All changes are immediately saved to the database.
+
+#### Deleting habits
+
+Remove habits you no longer need:
+
+1. Click the trash icon on the habit card
+2. Confirm deletion in the dialog
+
+<Warning>
+Deleting a habit is permanent and will remove all associated progress data. This action cannot be undone.
+</Warning>
+
+### Progress tracking
+
+#### Weekly grid
+
+Each habit displays a 7-day grid showing the current week:
+
+- **Green** - Habit completed on that day
+- **Gray** - Habit not completed
+- **Blue dot** - Today's date
+- **Disabled** - Future dates (cannot be marked)
+
+Click any day to toggle its completion status.
+
+#### Calendar view
+
+Access extended calendar view for any habit:
+
+1. Click the calendar icon on the habit card
+2. View monthly progress
+3. Navigate between months
+4. Mark or unmark any past date
+
+The calendar view provides a comprehensive history of your habit tracking.
+
+### Categories
+
+Six predefined categories with unique colors and icons:
+
+| Category | Color | Icon | Use case |
+|----------|-------|------|----------|
+| Wellness | Blue (#93c5fd) | 🧘 | Meditation, self-care |
+| Learning | Green (#86efac) | 📚 | Reading, studying |
+| Fitness | Orange (#fdba74) | 💪 | Exercise, sports |
+| Health | Red (#fca5a5) | ❤️ | Diet, sleep |
+| Productivity | Purple (#d8b4fe) | ⚡ | Work, projects |
+| Other | Light blue (#bfdbfe) | ⭐ | Miscellaneous |
+
+Categories help organize habits and provide visual grouping in analytics.
+
+## Analytics and statistics
+
+### Streak tracking
+
+#### Longest streak
+
+Displays your best performance:
+- Counts consecutive days of completion
+- Shows which habit achieved the streak
+- Updates automatically as you track
+
+#### Current streak
+
+Shows your active streak:
+- Counts ongoing consecutive days
+- Resets when you miss a day
+- Motivates consistent tracking
+
+### Completion metrics
+
+#### Total habits
+
+Simple count of all active habits in your tracker.
+
+#### This week
+
+Percentage of completed habit-days in the current week:
+- Calculated as: (completed days / total possible days) × 100
+- Updates in real-time as you track
+- Provides weekly performance overview
+
+### Visual analytics
+
+#### Category distribution
+
+Pie chart showing:
+- Breakdown of habits by category
+- Percentage of each category
+- Color-coded segments
+- Interactive tooltips
+
+#### Weekly progress
+
+Bar chart displaying:
+- Completed habits per day
+- 7-day view of current week
+- Visual comparison across days
+- Helps identify patterns
+
+## Sharing functionality
+
+### Generating share links
+
+Share your progress with others:
+
+1. Click "Share" button in the header
+2. Review the generated link
+3. Click "Copy Link" to copy to clipboard
+4. Share the link via any channel
+
+### Read-only mode
+
+Shared links open in read-only mode:
+- All habits and progress visible
+- No editing capabilities
+- Banner indicates shared view
+- Full analytics available
+
+<Info>
+Shared data is encoded in the URL using base64. No server-side storage is required, ensuring privacy and simplicity.
+</Info>
+
+## Theme customization
+
+### Dark and light modes
+
+Toggle between themes:
+- Click the sun/moon icon in the header
+- Automatic system preference detection
+- Smooth transitions between themes
+- Preference saved in browser
+
+### Theme features
+
+Both themes include:
+- Optimized color contrast
+- Consistent component styling
+- Chart color adaptation
+- Accessibility compliance
+
+## Data management
+
+### Export functionality
+
+Export your data for backup or analysis:
+
+1. Click the download icon in the header
+2. JSON file downloads automatically
+3. Contains all habits and progress data
+4. Can be imported or analyzed externally
+
+### Data persistence
+
+All data is automatically saved:
+- Changes sync to Supabase immediately
+- No manual save required
+- Offline changes queued for sync
+- Error handling with user feedback
+
+## User experience features
+
+### Empty states
+
+Helpful guidance when starting:
+- Welcoming message for new users
+- Clear call-to-action to add first habit
+- Encouraging copy to motivate action
+
+### Loading states
+
+Visual feedback during operations:
+- Button states during saves
+- Smooth transitions
+- Progress indicators where appropriate
+
+### Validation
+
+Input validation ensures data quality:
+- Real-time feedback on form fields
+- Clear error messages
+- Prevention of invalid submissions
+- Client and server-side validation
+
+### Responsive design
+
+Optimized for all devices:
+- **Mobile** (360px+) - Single column layout
+- **Tablet** (768px+) - Two column grid
+- **Desktop** (1024px+) - Full sidebar layout
+- Touch-friendly targets (44px minimum)
+
+## Accessibility features
+
+### Keyboard navigation
+
+Full keyboard support:
+- `Tab` - Navigate between elements
+- `Enter` - Activate buttons
+- `Escape` - Close modals
+- Arrow keys - Navigate within components
+
+### Screen reader support
+
+Comprehensive ARIA implementation:
+- Semantic HTML structure
+- ARIA labels on all interactive elements
+- ARIA roles for complex components
+- Descriptive alt text
+
+### Visual accessibility
+
+WCAG AA compliant:
+- Sufficient color contrast
+- Focus indicators on all elements
+- No color-only information
+- Scalable text and layouts
+
+### Motion preferences
+
+Respects user preferences:
+- Reduced motion support
+- Optional animations
+- Smooth but not distracting transitions
+
+## Performance features
+
+### Optimized loading
+
+Fast initial load:
+- Minimal dependencies
+- Efficient bundling with Vite
+- CSS and JS minification
+- Gzip compression
+
+### Efficient rendering
+
+Smart update strategy:
+- Targeted re-renders
+- Efficient DOM manipulation
+- Lazy loading for charts
+- Debounced user inputs
+
+### Database optimization
+
+Fast queries:
+- Indexed columns
+- Efficient query patterns
+- Minimal data transfer
+- Connection pooling
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="sitemap" href="/habits-tracker/architecture">
+    Understand the technical design
+  </Card>
+  <Card title="API reference" icon="code" href="/habits-tracker/api-reference">
+    Learn about services and components
+  </Card>
+  <Card title="Database schema" icon="database" href="/habits-tracker/database">
+    Explore data structure
+  </Card>
+  <Card title="Deployment" icon="rocket" href="/habits-tracker/deployment">
+    Deploy to production
+  </Card>
+</CardGroup>

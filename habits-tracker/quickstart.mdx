@@ -1,0 +1,139 @@
+---
+title: Quick start
+description: Get Habits Tracker up and running in minutes
+---
+
+## Prerequisites
+
+Before you begin, ensure you have:
+- Node.js 18 or higher installed
+- A Supabase account (free tier available at [supabase.com](https://supabase.com))
+- Git installed on your machine
+
+## Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/SkyBestPL/HabitsTracker.git
+cd HabitsTracker
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Configure Supabase
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+<Note>
+You can find your Supabase URL and anon key in your project settings under API.
+</Note>
+
+### Initialize the database
+
+The database schema is automatically created using Supabase migrations. The migration file is located at:
+
+```
+supabase/migrations/20251112153501_create_habits_tracker_schema.sql
+```
+
+This creates two tables:
+- `habits` - Stores habit information
+- `progress` - Tracks daily completion status
+
+### Load sample data (optional)
+
+To populate your database with example habits:
+
+```bash
+npm run seed
+```
+
+This will create sample habits across different categories to help you explore the application.
+
+## Running the application
+
+### Development mode
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+### Production build
+
+Create an optimized production build:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+
+## First steps
+
+Once the application is running:
+
+1. **Add your first habit** - Click the "Add Habit" button in the header
+2. **Fill in the details**:
+   - Name (required, 3-50 characters)
+   - Description (optional, max 200 characters)
+   - Choose a color from the palette
+   - Select a category
+3. **Track your progress** - Click on days in the weekly grid to mark them as complete
+4. **View analytics** - Check the sidebar for streak information and progress charts
+
+## Troubleshooting
+
+### Supabase connection issues
+
+If you see connection errors:
+- Verify your `.env` file contains the correct credentials
+- Check that your Supabase project is active
+- Ensure Row Level Security policies are properly configured
+
+### Build errors
+
+If you encounter build errors:
+- Delete `node_modules` and `package-lock.json`
+- Run `npm install` again
+- Clear Vite cache: `rm -rf node_modules/.vite`
+
+### Database schema issues
+
+If tables are missing:
+- Run the migration manually in your Supabase SQL editor
+- Copy the contents of the migration file and execute it
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="sitemap" href="/habits-tracker/architecture">
+    Learn about the project structure
+  </Card>
+  <Card title="Features" icon="sparkles" href="/habits-tracker/features">
+    Explore all capabilities
+  </Card>
+  <Card title="API reference" icon="code" href="/habits-tracker/api-reference">
+    Understand services and components
+  </Card>
+  <Card title="Database schema" icon="database" href="/habits-tracker/database">
+    Deep dive into data structure
+  </Card>
+</CardGroup>

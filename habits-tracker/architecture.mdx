@@ -1,0 +1,330 @@
+---
+title: Architecture
+description: Understanding the project structure and design patterns
+---
+
+## Project structure
+
+The application follows a modular architecture with clear separation of concerns:
+
+```
+/
+├── index.html                    # Main HTML entry point
+├── src/
+│   ├── main.js                   # Application entry point
+│   ├── app.js                    # Main application logic
+│   ├── styles.css                # Global styles
+│   ├── services/
+│   │   ├── supabase.js          # Database communication
+│   │   ├── analytics.js         # Statistics and analytics
+│   │   ├── share.js             # Sharing functionality
+│   │   ├── theme.js             # Theme management
+│   │   └── export.js            # Data export
+│   └── components/
+│       ├── HabitCard.js         # Habit card component
+│       ├── HabitModal.js        # Add/edit modal
+│       ├── ShareModal.js        # Share modal
+│       ├── CalendarModal.js     # Calendar view modal
+│       └── Charts.js            # Chart components
+├── supabase/
+│   └── migrations/              # Database migrations
+├── seed-data.js                 # Sample data script
+└── package.json
+```
+
+## Core components
+
+### App.js
+
+The main application controller that:
+- Initializes the application
+- Manages application state (habits, progress)
+- Handles routing between normal and read-only modes
+- Coordinates component rendering
+- Manages modal lifecycle
+
+```javascript
+export class App {
+  constructor() {
+    this.habits = [];
+    this.progress = [];
+    this.weekStart = analyticsService.getWeekStart();
+    this.isReadOnly = false;
+    this.currentModal = null;
+    this.charts = null;
+  }
+
+  async init() {
+    // Initialize theme
+    // Load data (from Supabase or URL)
+    // Render UI
+    // Attach event listeners
+  }
+}
+```
+
+### Services layer
+
+#### Supabase service
+
+Handles all database operations:
+- `habitService` - CRUD operations for habits
+- `progressService` - Managing daily progress tracking
+
+```javascript
+export const habitService = {
+  getAllHabits(),
+  createHabit(habit),
+  updateHabit(id, updates),
+  deleteHabit(id)
+};
+
+export const progressService = {
+  getProgress(),
+  toggleProgress(habitId, date),
+  getProgressForHabit(habitId, startDate, endDate)
+};
+```
+
+#### Analytics service
+
+Calculates statistics and metrics:
+- Current and longest streaks
+- Completion rates
+- Weekly progress
+- Category distribution
+
+#### Share service
+
+Manages sharing functionality:
+- Encodes data to base64 for URL
+- Parses shared links
+- Generates shareable URLs
+
+#### Theme service
+
+Controls dark/light mode:
+- Detects system preferences
+- Persists user choice
+- Applies theme classes
+
+#### Export service
+
+Handles data export:
+- Exports habits and progress to JSON
+- Generates downloadable files
+
+### Component layer
+
+#### HabitCard
+
+Displays individual habit with:
+- Weekly progress grid
+- Edit and delete actions
+- Visual indicators for completion
+- Category color coding
+
+#### HabitModal
+
+Form for creating/editing habits:
+- Input validation
+- Color picker
+- Category selection
+- Save/cancel actions
+
+#### ShareModal
+
+Interface for sharing:
+- Generates shareable link
+- Copy to clipboard functionality
+- Read-only mode explanation
+
+#### CalendarModal
+
+Extended calendar view:
+- Monthly view of progress
+- Historical data visualization
+- Date selection for tracking
+
+#### Charts
+
+Visualization components:
+- Weekly progress bar chart
+- Category distribution pie chart
+- Responsive and theme-aware
+
+## Design patterns
+
+### Component pattern
+
+Each component is a self-contained class that:
+- Manages its own state
+- Renders its own HTML
+- Handles its own events
+- Exposes callbacks for parent communication
+
+```javascript
+export class HabitCard {
+  constructor(habit, progress, weekStart, isReadOnly, onUpdate, onCalendarOpen) {
+    this.habit = habit;
+    this.progress = progress;
+    // ...
+  }
+
+  render() {
+    const card = document.createElement('div');
+    // Build and return DOM element
+    return card;
+  }
+}
+```
+
+### Service pattern
+
+Services provide stateless utility functions:
+- Single responsibility
+- No direct DOM manipulation
+- Reusable across components
+- Easy to test
+
+### Observer pattern
+
+Components communicate through callbacks:
+- Parent passes callbacks to children
+- Children invoke callbacks on events
+- Parent updates state and re-renders
+
+## Data flow
+
+1. **Initial load**
+   - App initializes
+   - Checks for shared data in URL
+   - Loads from Supabase if not shared
+   - Renders UI with data
+
+2. **User interaction**
+   - User clicks on UI element
+   - Component handles event
+   - Component calls service method
+   - Service updates Supabase
+   - Component invokes callback
+   - App reloads data and re-renders
+
+3. **Sharing flow**
+   - User clicks share button
+   - ShareModal encodes current data
+   - Generates URL with base64 data
+   - User copies and shares link
+   - Recipient opens link
+   - App detects shared data
+   - Renders in read-only mode
+
+## State management
+
+State is managed at the App level:
+- `habits` - Array of all habits
+- `progress` - Array of all progress entries
+- `weekStart` - Current week start date
+- `isReadOnly` - Whether in shared mode
+- `currentModal` - Active modal reference
+- `charts` - Chart instances
+
+State updates trigger full re-renders for simplicity and reliability.
+
+## Styling approach
+
+### CSS architecture
+
+- Global styles in `styles.css`
+- Component-specific classes
+- BEM-like naming convention
+- CSS custom properties for theming
+
+### Theme system
+
+```css
+:root {
+  --bg-primary: #ffffff;
+  --text-primary: #0f172a;
+  /* ... */
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --text-primary: #f1f5f9;
+  /* ... */
+}
+```
+
+### Responsive design
+
+- Mobile-first approach
+- Breakpoints at 768px and 1024px
+- Flexible grid layouts
+- Touch-friendly targets (44px minimum)
+
+## Performance considerations
+
+### Optimization strategies
+
+- Vite for fast builds and HMR
+- Minimal dependencies
+- Efficient re-rendering
+- Lazy loading for charts
+- CSS minification
+- JavaScript bundling
+
+### Database optimization
+
+- Indexes on frequently queried columns
+- Unique constraints to prevent duplicates
+- Cascade deletes for referential integrity
+- Row Level Security for access control
+
+## Security
+
+### Database security
+
+- Row Level Security (RLS) enabled
+- Public policies for demo purposes
+- Environment variables for credentials
+- No sensitive data in client code
+
+<Warning>
+The current implementation uses public access policies for simplicity. For production use with user authentication, implement proper RLS policies based on user IDs.
+</Warning>
+
+## Accessibility
+
+### WCAG compliance
+
+- Semantic HTML structure
+- ARIA labels on interactive elements
+- Keyboard navigation support
+- Focus management
+- Color contrast ratios (WCAG AA)
+- Screen reader compatibility
+
+### Keyboard shortcuts
+
+- `Tab` - Navigate between elements
+- `Enter` - Activate buttons/links
+- `Escape` - Close modals
+- Arrow keys - Navigate within components
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Features" icon="sparkles" href="/habits-tracker/features">
+    Explore all capabilities
+  </Card>
+  <Card title="API reference" icon="code" href="/habits-tracker/api-reference">
+    Learn about services and components
+  </Card>
+  <Card title="Database schema" icon="database" href="/habits-tracker/database">
+    Understand data structure
+  </Card>
+  <Card title="Deployment" icon="rocket" href="/habits-tracker/deployment">
+    Deploy to production
+  </Card>
+</CardGroup>

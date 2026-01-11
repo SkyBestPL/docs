@@ -61,7 +61,7 @@ const newHabit = await habitService.createHabit({
   - `color` (string, required) - Hex color code
   - `icon` (string, optional) - Emoji or icon
 
-**Returns:** `Promise<Habit>`
+**Returns:** `Promise\<Habit\>`
 
 **Throws:** Error if validation fails or database operation fails
 
@@ -80,7 +80,7 @@ const updated = await habitService.updateHabit(
 - `id` (string) - Habit UUID
 - `updates` (Object) - Fields to update
 
-**Returns:** `Promise<Habit>`
+**Returns:** `Promise\<Habit\>`
 
 ##### deleteHabit(id)
 
